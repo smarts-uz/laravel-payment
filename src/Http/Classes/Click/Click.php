@@ -147,6 +147,32 @@ class Click extends BaseGateway
         $this->response->setResult(Response::SUCCESS, $additional_params);
     }
 
+    public function getUserBalance() {
+        $data = $this->request->all();
+        if ($data['action'] != 0) {
+            return response()->json([
+                'error' => -3,
+                'error_note' => "Запрашиваемое действие не найдено"
+            ]);
+        }
+
+        $user = PaymentService::convertKeyToModel($data['params']['user_id']);
+        if (!$user) {
+            return response()->json([
+                'error' => -5,
+                'error_note' => "Не найден пользователь исходя из присланных данных платежа в params"
+            ]);
+        }
+        return response()->json([
+            "error" => 0,
+            "error_note" => "Успешно",
+            "params" => [
+                'title' => "Balance",
+                'balance' => $user->walletBalance->balance ?? 0
+            ]
+        ]);
+    }
+
     protected function check_for_required_field($fields)
     {
         $arr = $this->request->all();

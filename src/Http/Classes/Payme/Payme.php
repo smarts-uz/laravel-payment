@@ -24,7 +24,7 @@ class Payme extends BaseGateway
      */
     public function __construct()
     {
-        $this->config   = PaymentSystemService::getPaymentSystemParamsCollect(PaymentSystem::PAYME);
+        $this->config = PaymentSystemService::getPaymentSystemParamsCollect(PaymentSystem::PAYME);
     }
 
     public function run()
@@ -97,7 +97,16 @@ class Payme extends BaseGateway
         }
         PaymentService::payListener($model, null, 'before-pay');
 
-        $this->response->success(['allow' => true]);
+        if (isset($this->config['additional_user_balance'])) {
+            $this->response->success([
+                'allow' => true,
+                'additional' => [
+                    'balance' => $model->balance ?? 0
+                ]
+            ]);
+        } else {
+            $this->response->success(['allow' => true]);
+        }
     }
     protected function CheckTransaction()
     {

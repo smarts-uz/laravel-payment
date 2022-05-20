@@ -187,17 +187,29 @@ class Paynet extends BaseGateway
         $model = PaymentService::convertKeyToModel($this->request->params['key']);
 
         if ($model) {
-            return  "<ns2:GetInformationResult xmlns:ns2=\"http://uws.provider.com/\">" .
-                "<errorMsg>Success</errorMsg>" .
-                "<status>0</status>" .
-                "<timeStamp>" . DataFormat::toDateTimeWithTimeZone(now()) . "</timeStamp>" .
-                "<parameters>" .
-                "<paramKey>balance</paramKey>" .
-                "<paramValue>" . $model->balance . "</paramValue>" .
-                "<paramKey>userInfo</paramKey>" .
-                "<paramValue>" . $model->name . "</paramValue>" .
-                "</parameters>" .
-                "</ns2:GetInformationResult>";
+            if (isset($this->config['additional_user_balance'])) {
+                return  "<ns2:GetInformationResult xmlns:ns2=\"http://uws.provider.com/\">" .
+                    "<errorMsg>Success</errorMsg>" .
+                    "<status>0</status>" .
+                    "<timeStamp>" . DataFormat::toDateTimeWithTimeZone(now()) . "</timeStamp>" .
+                    "<parameters>" .
+                    "<paramKey>balance</paramKey>" .
+                    "<paramValue>" . ($model->balance ?? 0) . "</paramValue>" .
+                    "<paramKey>userInfo</paramKey>" .
+                    "<paramValue>" . $model->name . "</paramValue>" .
+                    "</parameters>" .
+                    "</ns2:GetInformationResult>";
+            } else {
+                return  "<ns2:GetInformationResult xmlns:ns2=\"http://uws.provider.com/\">" .
+                    "<errorMsg>Success</errorMsg>" .
+                    "<status>0</status>" .
+                    "<timeStamp>" . DataFormat::toDateTimeWithTimeZone(now()) . "</timeStamp>" .
+                    "<parameters>" .
+                    "<paramKey>userInfo</paramKey>" .
+                    "<paramValue>" . $model->name . "</paramValue>" .
+                    "</parameters>" .
+                    "</ns2:GetInformationResult>";
+            }
         } else {
             return  "<ns2:GetInformationResult xmlns:ns2=\"http://uws.provider.com/\">" .
                 "<errorMsg>Not Found</errorMsg>" .
