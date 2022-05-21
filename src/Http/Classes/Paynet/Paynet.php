@@ -195,6 +195,8 @@ class Paynet extends BaseGateway
                     "<parameters>" .
                     "<paramKey>balance</paramKey>" .
                     "<paramValue>" . ($model->balance ?? 0) . "</paramValue>" .
+                    "</parameters>" .
+                    "<parameters>" .
                     "<paramKey>userInfo</paramKey>" .
                     "<paramValue>" . $model->name . "</paramValue>" .
                     "</parameters>" .
