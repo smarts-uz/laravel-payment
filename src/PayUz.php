@@ -43,6 +43,11 @@ class PayUz
         return $this;
     }
 
+    public function click_additional()
+    {
+        return (new Click())->getUserBalance();
+    }
+
 
     public function redirect($model, $amount, $currency_code = Transaction::CURRENCY_CODE_UZS, $url = null)
     {
