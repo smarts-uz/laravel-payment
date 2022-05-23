@@ -97,12 +97,18 @@ class Payme extends BaseGateway
         }
         PaymentService::payListener($model, null, 'before-pay');
 
-        if (isset($this->config['additional_user_balance'])) {
+        if (isset($this->config['additional_1'])) {
+            $additional = [];
+            $startWith = 'additional';
+            foreach($this->config->toArray() as $key => $value){
+                $exp_key = explode('_', $key);
+                if($exp_key[0] == $startWith){
+                    $additional[$value] = $model->$value;
+                }
+            }
             $this->response->success([
                 'allow' => true,
-                'additional' => [
-                    'balance' => $model->balance ?? 0
-                ]
+                'additional' => $additional
             ]);
         } else {
             $this->response->success(['allow' => true]);

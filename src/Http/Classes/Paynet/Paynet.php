@@ -187,19 +187,24 @@ class Paynet extends BaseGateway
         $model = PaymentService::convertKeyToModel($this->request->params['key']);
 
         if ($model) {
-            if (isset($this->config['additional_user_balance'])) {
+            if (isset($this->config['additional_1'])) {
+                $additional = "";
+                $startWith = 'additional';
+                foreach($this->config->toArray() as $key => $value){
+                    $exp_key = explode('_', $key);
+                    if($exp_key[0] == $startWith) {
+                        $additional .=
+                            "<parameters>" .
+                            "<paramKey>$value</paramKey>" .
+                            "<paramValue>" . ($model->$value ?? null) . "</paramValue>" .
+                            "</parameters>";
+                    }
+                }
                 return  "<ns2:GetInformationResult xmlns:ns2=\"http://uws.provider.com/\">" .
                     "<errorMsg>Success</errorMsg>" .
                     "<status>0</status>" .
                     "<timeStamp>" . DataFormat::toDateTimeWithTimeZone(now()) . "</timeStamp>" .
-                    "<parameters>" .
-                    "<paramKey>balance</paramKey>" .
-                    "<paramValue>" . ($model->balance ?? 0) . "</paramValue>" .
-                    "</parameters>" .
-                    "<parameters>" .
-                    "<paramKey>userInfo</paramKey>" .
-                    "<paramValue>" . $model->name . "</paramValue>" .
-                    "</parameters>" .
+                    $additional .
                     "</ns2:GetInformationResult>";
             } else {
                 return  "<ns2:GetInformationResult xmlns:ns2=\"http://uws.provider.com/\">" .
