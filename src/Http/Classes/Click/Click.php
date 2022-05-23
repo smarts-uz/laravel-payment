@@ -163,13 +163,18 @@ class Click extends BaseGateway
                 'error_note' => "Не найден пользователь исходя из присланных данных платежа в params"
             ]);
         }
+        $additional = [];
+        $startWith = 'additional';
+        foreach($this->config->toArray() as $key => $value){
+            $exp_key = explode('_', $key);
+            if($exp_key[0] == $startWith){
+                $additional[$value] = $user->$value;
+            }
+        }
         return response()->json([
             "error" => 0,
             "error_note" => "Успешно",
-            "params" => [
-                'title' => "Balance",
-                'balance' => $user->walletBalance->balance ?? 0
-            ]
+            "params" => $additional
         ]);
     }
 
