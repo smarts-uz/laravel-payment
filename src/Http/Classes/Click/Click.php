@@ -147,6 +147,13 @@ class Click extends BaseGateway
         $this->response->setResult(Response::SUCCESS, $additional_params);
     }
 
+    /**
+     * get user balance
+     *
+     * get additional user fields on click
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getUserBalance() {
         $data = $this->request->all();
         if ($data['action'] != 0) {
