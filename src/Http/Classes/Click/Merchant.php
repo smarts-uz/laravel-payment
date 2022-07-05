@@ -4,7 +4,6 @@ namespace Teamprodev\LaravelPayment\Http\Classes\Click;
 
 use Teamprodev\LaravelPayment\Models\PaymentSystem;
 use Teamprodev\LaravelPayment\Services\PaymentSystemService;
-use Teamprodev\LaravelPaymentHttp\Classes\Click\Response;
 
 class Merchant
 {
