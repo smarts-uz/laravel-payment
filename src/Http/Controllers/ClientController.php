@@ -25,6 +25,7 @@ class ClientController extends Controller
             case PaymentSystem::PAYME:
                 $params = PaymentSystemService::getPaymentSystemParamsCollect(PaymentSystem::PAYME);
                 $merchant_id = $params['merchant_id'];
+                $amount *= 100;
                 $data = "m=$merchant_id;ac.user_id=$transaction_param;a=$amount";
                 return redirect()->to('https://checkout.paycom.uz/' . base64_encode($data));
 
