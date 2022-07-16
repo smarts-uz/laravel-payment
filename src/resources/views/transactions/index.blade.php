@@ -17,9 +17,6 @@
             <div class="col-6">
                 <span class="h5">Transactions</span>
             </div>
-            <div class="col-6 text-right">
-                <a href="{{ route('payment.transactions.create') }}" class="btn btn-sm btn-primary" role="button"><span class="fa fa-plus"></span> Add new</a>
-            </div>
         </div>
         <!-- </div> -->
         <div class="col-12 box-admin pt-3 pb-3">

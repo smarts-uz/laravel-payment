@@ -85,6 +85,12 @@ class PayUzSeeder extends Seeder
                 'name'      => 'merchant_user_id',
                 'value'     => '0000'
             ]);
+            PaymentSystemParam::query()->firstOrCreate([
+                'system'    => 'click',
+                'label'     => 'Return url after pay',
+                'name'      => 'return_url',
+                'value'     => 'https://test.com/page'
+            ]);
 
             //Paynet
             PaymentSystemParam::query()->firstOrCreate([
