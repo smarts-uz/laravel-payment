@@ -105,7 +105,7 @@ class Paynet extends BaseGateway
             'system_transaction_id' => $this->request->params['transactionId'],
             'amount'                => 1 * $this->request->params['amount'],
             'currency_code'         => Transaction::CURRENCY_CODE_UZS,
-            'state'                 => Transaction::STATE_CREATED,
+            'state'                 => Transaction::STATE_COMPLETED,
             'updated_time'          => 1 * $create_time,
             'comment'               => (isset($this->request->params['error_note']) ? $this->request->params['error_note'] : ''),
             'detail'                => $detail,
