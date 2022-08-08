@@ -6,11 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 use Teamprodev\LaravelPayment\Http\Classes\DataFormat;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property $id
+ * @property $system_transaction_id
+ * @property $amount
+ * @property $state
+ * @property $comment
+ * @property $detail
+ * @property $transactionable_id
+ * @property $updated_time
+ */
 class Transaction extends Model
 {
     use SoftDeletes;
 
-    protected $dates    = [
+    protected $dates = [
         'deleted_at'
     ];
     protected $casts = [
@@ -32,6 +42,7 @@ class Transaction extends Model
 
     const STATE_CREATED = 1;
     const STATE_COMPLETED = 2;
+    const STATE_INVOICE_SENT = 3;
     const STATE_CANCELLED = -1;
     const STATE_CANCELLED_AFTER_COMPLETE = -2;
 
@@ -46,6 +57,12 @@ class Transaction extends Model
     const CURRENCY_CODE_RUB = 643;
     const CURRENCY_CODE_USD = 840;
     const CURRENCY_CODE_EUR = 978;
+
+    public function transactionable()
+    {
+        return $this->morphTo();
+    }
+
 
     public function cancel($reason)
     {
@@ -66,7 +83,7 @@ class Transaction extends Model
 
         $this->update();
     }
-    public function isExpired()
+    public function isExpired(): bool
     {
         return $this->state != self::STATE_CREATED && DataFormat::datetime2timestamp($this->updated_time) - time() > self::TIMEOUT;
     }

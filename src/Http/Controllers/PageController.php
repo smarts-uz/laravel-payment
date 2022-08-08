@@ -30,6 +30,12 @@ class PageController extends Controller
         $listeners['after_pay']['content']     = file_get_contents(base_path('/app/Http/Payments/after_pay.php'));
         $listeners['after_pay']['title']       = 'After pay: payListener($model = null, $transaction, $action_type = \'after-pay\')';
 
+        $listeners['after_paid_invoice']['content']     = file_get_contents(base_path('/app/Http/Payments/after_paid_invoice.php'));
+        $listeners['after_paid_invoice']['title']       = 'After paid invoice: payListener($model = null, $transaction, $action_type = \'after-paid-invoice\')';
+
+        $listeners['after_cancelled_invoice']['content']     = file_get_contents(base_path('/app/Http/Payments/after_cancelled_invoice.php'));
+        $listeners['after_cancelled_invoice']['title']       = 'After cancelled invoice: payListener($model = null, $transaction, $action_type = \'after-cancelled-invoice\')';
+
         $listeners['paying']['content']        = file_get_contents(base_path('/app/Http/Payments/paying.php'));
         $listeners['paying']['title']          = 'Paying: payListener($model, $transaction, $action_type = \'paying\')';
 

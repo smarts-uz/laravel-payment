@@ -2,6 +2,7 @@
 
 namespace Teamprodev\LaravelPayment;
 
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\ServiceProvider;
 
 class PayUzServiceProvider extends ServiceProvider
@@ -28,6 +29,11 @@ class PayUzServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/resources/assets' => public_path('vendor/pay-uz'),
             ], 'pay-uz-assets');
+
+            $this->app->booted(function () {
+                $schedule = $this->app->make(Schedule::class);
+                $schedule->command('check:invoice')->everyMinute();
+            });
         }
     }
 

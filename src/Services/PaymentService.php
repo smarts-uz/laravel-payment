@@ -52,6 +52,14 @@ class PaymentService
             case 'cancel-pay':
                 require base_path('/app/Http/Payments/cancel_pay.php');
                 break;
+
+            case 'after-paid-invoice':
+                require base_path('/app/Http/Payments/after_paid_invoice.php');
+                break;
+
+            case 'after-cancelled-invoice':
+                require base_path('/app/Http/Payments/after_cancelled_invoice.php');
+                break;
         }
     }
 }
