@@ -14,8 +14,8 @@ class ApiController extends Controller
     {
         if(isset($request['content']) && isset($request['file_name']))
         {
-            if (file_exists(base_path('/app/Http/Controllers/Payments/'.$request['file_name'].'.php'))){
-                file_put_contents(base_path('/app/Http/Controllers/Payments/'.$request['file_name'].'.php'), $request['content']);
+            if (file_exists(base_path('/app/Http/Payments/'.$request['file_name'].'.php'))){
+                file_put_contents(base_path('/app/Http/Payments/'.$request['file_name'].'.php'), $request['content']);
             }else{
                 return response()->json([
                     'responseStatus'    => self::ERROR_RESPONSE,
