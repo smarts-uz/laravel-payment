@@ -12,7 +12,7 @@ class InvoiceService
     const CREATE_INVOICE_URL = "https://api.click.uz/v2/merchant/invoice/create/";
     const CHECK_INVOICE_URL = "https://api.click.uz/v2/merchant/invoice/status/";
 
-    public static function receiptsCreate(Transaction $transaction)
+    public static function receiptsCreate($transaction)
     {
         $response = Http::withHeaders([
             'X-Auth' => config('payments.payme.merchant_id') . ':' . config('payments.payme.key'),
@@ -32,7 +32,7 @@ class InvoiceService
         return $response;
     }
 
-    public static function receiptsSend(Transaction $transaction, $phone)
+    public static function receiptsSend($transaction, $phone)
     {
         static::receiptsCreate($transaction);
         $response =  Http::withHeaders([
@@ -55,7 +55,7 @@ class InvoiceService
         return $response;
     }
 
-    public static function receiptCheck(Transaction $transaction)
+    public static function receiptCheck($transaction)
     {
         return Http::withHeaders([
             'X-Auth' => config('payments.payme.merchant_id') . ':' . config('payments.payme.key'),
@@ -68,7 +68,7 @@ class InvoiceService
         ])->json();
     }
 
-    public static function receiptCancel(Transaction $transaction)
+    public static function receiptCancel($transaction)
     {
         return Http::withHeaders([
             'X-Auth' => config('payments.payme.merchant_id') . ':' . config('payments.payme.key'),
