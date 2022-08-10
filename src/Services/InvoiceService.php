@@ -3,6 +3,7 @@
 namespace Teamprodev\LaravelPayment\Services;
 
 use Illuminate\Support\Facades\Http;
+use Teamprodev\LaravelPayment\Models\PaymentSystem;
 use Teamprodev\LaravelPayment\Models\Transaction;
 use Teamprodev\LaravelPayment\Models\TransactionForCheck;
 
@@ -15,7 +16,7 @@ class InvoiceService
     public static function receiptsCreate($transaction)
     {
         $response = Http::withHeaders([
-            'X-Auth' => config('payments.payme.merchant_id') . ':' . config('payments.payme.key'),
+            'X-Auth' => self::generatePaymeHeader(),
         ])->post(self::CHECKOUT_PAYME_URL, [
             "id" => $transaction->id,
             "method" => "receipts.create",
@@ -36,7 +37,7 @@ class InvoiceService
     {
         static::receiptsCreate($transaction);
         $response =  Http::withHeaders([
-            'X-Auth' => config('payments.payme.merchant_id') . ':' . config('payments.payme.key'),
+            'X-Auth' => self::generatePaymeHeader(),
         ])->post(self::CHECKOUT_PAYME_URL, [
             "id" => $transaction->id,
             "method" => "receipts.send",
@@ -58,7 +59,7 @@ class InvoiceService
     public static function receiptCheck($transaction)
     {
         return Http::withHeaders([
-            'X-Auth' => config('payments.payme.merchant_id') . ':' . config('payments.payme.key'),
+            'X-Auth' => self::generatePaymeHeader(),
         ])->post(self::CHECKOUT_PAYME_URL, [
             "id" => $transaction->id,
             "method" => "receipts.check",
@@ -81,33 +82,40 @@ class InvoiceService
         ])->json();
     }
 
+    public static function generatePaymeHeader()
+    {
+        $params = PaymentSystemService::getPaymentSystemParamsCollect(PaymentSystem::PAYME);
+        return $params['merchant_id'] . ':' . $params['key'];
+    }
 
     public static function createInvoice($amount, $phone_number, $transaction)
     {
+        $service_id = PaymentSystemService::getPaymentSystemParamsCollect(PaymentSystem::CLICK)['service_id'];
         $response = Http::withHeaders([
             "Accept" => "application/json",
             "Content-Type" => "application/json",
             'Auth' => self::generateHeader(),
         ])->post(self::CREATE_INVOICE_URL, [
-            "service_id" => config('payments.click.service_id'),
+            "service_id" => $service_id,
             "amount" => $amount,
             "phone_number" => $phone_number,
             "merchant_trans_id" => $transaction->transactionable_id
         ])->json();
 
         $transaction->update([
-            'invoice_id' => $response['invoice_id'],
+            'system_transaction_id' => $response['invoice_id'],
             'status' => Transaction::STATE_INVOICE_SENT
         ]);
     }
 
     public static function checkInvoiceStatus($invoice_id)
     {
+        $service_id = PaymentSystemService::getPaymentSystemParamsCollect(PaymentSystem::CLICK)['service_id'];
         return Http::withHeaders([
             "Accept" => "application/json",
             "Content-Type" => "application/json",
             'Auth' => self::generateHeader(),
-        ])->get(self::CHECK_INVOICE_URL . config('payments.click.service_id') . '/' . $invoice_id)->json();
+        ])->get(self::CHECK_INVOICE_URL . $service_id . '/' . $invoice_id)->json();
     }
 
     public static function generateHeader(): string
