@@ -102,7 +102,7 @@ class InvoiceService
     public static function receiptCancel($transaction)
     {
         return Http::withHeaders([
-            'X-Auth' => config('payments.payme.merchant_id') . ':' . config('payments.payme.key'),
+            'X-Auth' => self::generatePaymeHeader(),
         ])->post(self::CHECKOUT_PAYME_URL, [
             "id" => $transaction->id,
             "method" => "receipts.cancel",

@@ -64,6 +64,12 @@ class Transaction extends Model
     }
 
 
+    /**
+     * Cancel transaction by reason.
+     *
+     * @param $reason
+     * @return void
+     */
     public function cancel($reason)
     {
         $this->updated_time = DataFormat::timestamp(true);
@@ -83,6 +89,12 @@ class Transaction extends Model
 
         $this->update();
     }
+
+    /**
+     * Check transaction time is expired
+     *
+     * @return bool
+     */
     public function isExpired(): bool
     {
         return $this->state != self::STATE_CREATED && DataFormat::datetime2timestamp($this->updated_time) - time() > self::TIMEOUT;

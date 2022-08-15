@@ -44,6 +44,12 @@ class TransactionForCheck extends Model
         return $this->belongsTo(Transaction::class, 'transaction_id', 'id');
     }
 
+    /**
+     * Check waiting transactions status from payme
+     * Change status according to payme response status
+     *
+     * @return bool
+     */
     public function check(): bool
     {
         $transaction = $this->transaction;
