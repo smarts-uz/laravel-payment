@@ -7,12 +7,22 @@ use Teamprodev\LaravelPayment\Models\PaymentSystem;
 use Teamprodev\LaravelPayment\Models\Transaction;
 use Teamprodev\LaravelPayment\Models\TransactionForCheck;
 
+/**
+ * Work with payme, click invoices - e.g create, send, check invoices
+ *
+ */
 class InvoiceService
 {
     const CHECKOUT_PAYME_URL = "https://checkout.paycom.uz/api";
     const CREATE_INVOICE_URL = "https://api.click.uz/v2/merchant/invoice/create/";
     const CHECK_INVOICE_URL = "https://api.click.uz/v2/merchant/invoice/status/";
 
+    /**
+     * Create payme receipt for send to user
+     *
+     * @param $transaction
+     * @return array|mixed
+     */
     public static function receiptsCreate($transaction)
     {
         $response = Http::withHeaders([
@@ -33,6 +43,14 @@ class InvoiceService
         return $response;
     }
 
+
+    /**
+     * Send payme receipt to user by system_transaction_id
+     *
+     * @param $transaction
+     * @param $phone
+     * @return array|mixed
+     */
     public static function receiptsSend($transaction, $phone)
     {
         static::receiptsCreate($transaction);
@@ -56,6 +74,12 @@ class InvoiceService
         return $response;
     }
 
+    /**
+     * Check payme receipt for paid
+     *
+     * @param $transaction
+     * @return array|mixed
+     */
     public static function receiptCheck($transaction)
     {
         return Http::withHeaders([
@@ -69,6 +93,12 @@ class InvoiceService
         ])->json();
     }
 
+    /**
+     * Cancel payme receipt
+     *
+     * @param $transaction
+     * @return array|mixed
+     */
     public static function receiptCancel($transaction)
     {
         return Http::withHeaders([
@@ -82,12 +112,25 @@ class InvoiceService
         ])->json();
     }
 
+    /**
+     * Generate payne header for use on receipt functions
+     *
+     * @return string
+     */
     public static function generatePaymeHeader()
     {
         $params = PaymentSystemService::getPaymentSystemParamsCollect(PaymentSystem::PAYME);
-        return $params['merchant_id'] . ':' . $params['key'];
+        return $params['merchant_id'] . ':' . $params['password'];
     }
 
+    /**
+     * Create click invoice for send to user
+     *
+     * @param $amount
+     * @param $phone_number
+     * @param $transaction
+     * @return void
+     */
     public static function createInvoice($amount, $phone_number, $transaction)
     {
         $service_id = PaymentSystemService::getPaymentSystemParamsCollect(PaymentSystem::CLICK)['service_id'];
@@ -104,10 +147,16 @@ class InvoiceService
 
         $transaction->update([
             'system_transaction_id' => $response['invoice_id'],
-            'status' => Transaction::STATE_INVOICE_SENT
+            'state' => Transaction::STATE_INVOICE_SENT
         ]);
     }
 
+    /**
+     * Check click invoice
+     *
+     * @param $invoice_id
+     * @return array|mixed
+     */
     public static function checkInvoiceStatus($invoice_id)
     {
         $service_id = PaymentSystemService::getPaymentSystemParamsCollect(PaymentSystem::CLICK)['service_id'];
@@ -118,9 +167,15 @@ class InvoiceService
         ])->get(self::CHECK_INVOICE_URL . $service_id . '/' . $invoice_id)->json();
     }
 
+    /**
+     * Generate payme header for use on invoice functions
+     *
+     * @return array|mixed
+     */
     public static function generateHeader(): string
     {
-        $digest = sha1(now()->timestamp . config('payments.click.secret_key'));
-        return config('payments.click.merchant_user_id') . ":" . $digest . ":" . now()->timestamp;
+        $params = PaymentSystemService::getPaymentSystemParamsCollect(PaymentSystem::CLICK);
+        $digest = sha1(now()->timestamp . $params['secret_key']);
+        return $params['merchant_user_id'] . ":" . $digest . ":" . now()->timestamp;
     }
 }
