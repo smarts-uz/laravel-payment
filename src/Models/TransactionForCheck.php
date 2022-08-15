@@ -22,8 +22,7 @@ class TransactionForCheck extends Model
 {
     use HasFactory;
 
-    const STATUS_WAIT_FOR_CHECK = 0;
-    const STATUS_IN_CHECK = 1;
+    const STATUS_IN_CHECK = 0;
 
     const TRANSACTION_PAID = 4;
     const TRANSACTION_CANCELLED = 50;
@@ -47,21 +46,19 @@ class TransactionForCheck extends Model
 
     public function check(): bool
     {
-        $createTime = Carbon::parse($this->created_at);
-        $expireTime = Carbon::now()->subMinutes(15);
         $transaction = $this->transaction;
-        if ($createTime > $expireTime) {
+        if (now()->diffInMinutes($this->created_at) > config('payuz')['invoice_life_time']) {
             InvoiceService::receiptCancel($transaction);
         }
-        $this->update([
-            'status' => self::STATUS_IN_CHECK
-        ]);
+
         $response = InvoiceService::receiptCheck($transaction);
         $state = $response['result']['state'];
         if ($state == self::TRANSACTION_PAID) {
             PaymentService::payListener(null, $transaction, 'after-paid-invoice');
         } elseif ($state == self::TRANSACTION_CANCELLED) {
             PaymentService::payListener(null, $transaction, 'after-cancelled-invoice');
+        } elseif ($state != self::STATUS_IN_CHECK) {
+            $transaction->update(['status' => $state]);
         }
         return true;
     }

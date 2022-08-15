@@ -29,8 +29,8 @@ class CheckInvoiceCommand extends Command
     public function handle()
     {
         /** @var TransactionForCheck $transactionsForCheck */
-        $transactionsForCheck = TransactionForCheck::with('transaction')
-            ->where('status', TransactionForCheck::STATUS_WAIT_FOR_CHECK)
+        $transactionsForCheck = TransactionForCheck::query()->whereHas('transaction')
+            ->where('status', TransactionForCheck::STATUS_IN_CHECK)
             ->get();
 
         foreach ($transactionsForCheck as $transactionForCheck) {

@@ -5,11 +5,13 @@
  */
 return [
 
-        // Assets folder published folder name.
+    // Assets folder published folder name.
 
-        'pay_assets_path'   => '/vendor/pay-uz',
-        'control_panel' => [
-                'middleware' => null
-        ],
-        'multi_transaction' => true,
+    'pay_assets_path' => '/vendor/pay-uz',
+    'control_panel' => [
+        'middleware' => null
+    ],
+    'multi_transaction' => true,
+
+    'invoice_life_time' => 15, // minutes
 ];
