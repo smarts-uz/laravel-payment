@@ -147,7 +147,7 @@ class InvoiceService
 
         $transaction->update([
             'system_transaction_id' => $response['invoice_id'],
-            'state' => Transaction::STATE_INVOICE_SENT
+            'state' => Transaction::STATE_CREATED
         ]);
     }
 
