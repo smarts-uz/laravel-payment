@@ -60,9 +60,9 @@ class TransactionForCheck extends Model
         $response = InvoiceService::receiptCheck($transaction);
         $state = $response['result']['state'];
         if ($state == self::TRANSACTION_PAID) {
-            PaymentService::payListener(null, $transaction, 'after-paid-invoice');
+            PaymentService::payListener(null, $transaction, 'after-pay');
         } elseif ($state == self::TRANSACTION_CANCELLED) {
-            PaymentService::payListener(null, $transaction, 'after-cancelled-invoice');
+            PaymentService::payListener(null, $transaction, 'cancel-pay');
         } elseif ($state != self::STATUS_IN_CHECK) {
             $transaction->update(['status' => $state]);
         }

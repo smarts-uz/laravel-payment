@@ -125,6 +125,7 @@ class Click extends BaseGateway
             $additional_params['error_note'] = $params['error_note'];
             $transaction->state = Transaction::STATE_CANCELLED;
             $transaction->update();
+            PaymentService::payListener(null, $transaction, 'cancel-pay');
             $this->response->setResult(Response::ERROR_TRANSACTION_CANCELLED);
         }
 
