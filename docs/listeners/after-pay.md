@@ -1,7 +1,7 @@
 # After pay
 
 With the installation of Package you will find a new configuration files located at `config/payuz.php`.  
-In this file you can find various options to change the configuration of your Voyager installation.
+In this file you can find various options to change the configuration of your Package installation.
 
 **If you cache your configuration files please make sure to run `php artisan config:clear` after you changed something.**
 

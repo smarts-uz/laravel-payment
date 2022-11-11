@@ -126,12 +126,11 @@ class InvoiceService
     /**
      * Create click invoice for send to user
      *
-     * @param $amount
-     * @param $phone_number
      * @param $transaction
+     * @param $phone_number
      * @return void
      */
-    public static function createInvoice($amount, $phone_number, $transaction)
+    public static function createInvoice($transaction, $phone_number)
     {
         $service_id = PaymentSystemService::getPaymentSystemParamsCollect(PaymentSystem::CLICK)['service_id'];
         $response = Http::withHeaders([
@@ -140,7 +139,7 @@ class InvoiceService
             'Auth' => self::generateHeader(),
         ])->post(self::CREATE_INVOICE_URL, [
             "service_id" => $service_id,
-            "amount" => $amount,
+            "amount" => $transaction->amount,
             "phone_number" => $phone_number,
             "merchant_trans_id" => $transaction->transactionable_id
         ])->json();

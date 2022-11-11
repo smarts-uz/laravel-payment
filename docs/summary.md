@@ -8,7 +8,8 @@
 * [Prerequisites](getting-started/prerequisites.md)
 * [Installation](getting-started/installation.md)
 * [Configurations](getting-started/configurations.md)
-* [Usage](getting-started/usage.md)
+* [Basic usage](getting-started/usage.md)
+* [Integrate with invoices](getting-started/invoice_usage.md)
 * [Upgrading](getting-started/upgrading.md)
 
 ## Listeners

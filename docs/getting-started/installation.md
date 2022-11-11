@@ -1,6 +1,6 @@
 # Installation
 
-Voyager is super easy to install. After creating your new Laravel application you can include the Voyager package with the following command:
+Package is super easy to install. After creating your new Laravel application you can include the Package package with the following command:
 
 ```bash
 composer require teamprodev/laravel-payment

@@ -2,6 +2,8 @@
 
 namespace Teamprodev\LaravelPayment;
 
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Teamprodev\LaravelPayment\Models\Transaction;
 use Teamprodev\LaravelPayment\Models\PaymentSystem;
 use Teamprodev\LaravelPayment\Http\Classes\Payme\Payme;
@@ -27,7 +29,7 @@ class PayUz
      * @param null $driver
      * @return $this
      */
-    public function driver($driver = null)
+    public function driver($driver = null): PayUz
     {
         switch ($driver) {
             case PaymentSystem::PAYME:
@@ -43,12 +45,15 @@ class PayUz
         return $this;
     }
 
-    public function click_additional()
+    public function click_additional(): JsonResponse
     {
         return (new Click())->getUserBalance();
     }
 
 
+    /**
+     * @throws Exception
+     */
     public function redirect($model, $amount, $currency_code = Transaction::CURRENCY_CODE_UZS, $url = null)
     {
         $this->validateDriver();
@@ -61,6 +66,9 @@ class PayUz
     }
 
 
+    /**
+     * @throws Exception
+     */
     public function handle()
     {
         $this->validateDriver();
@@ -69,33 +77,32 @@ class PayUz
         } catch (PaymentException $e) {
             return $e->response();
         }
-
-        return $this;
     }
 
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function validateModel($model, $amount, $currency_code)
     {
         if (is_null($model))
-            throw new \Exception('Modal can\'t be null');
-        if (is_null($amount) || $amount == 0)
-            throw new \Exception('Amount can\'t be null or 0');
+            throw new Exception('Modal can\'t be null');
+        if ($amount == 0)
+            throw new Exception('Amount can\'t be null or 0');
         if (is_null($currency_code))
-            throw new \Exception('Currency code can\'t be null');
+            throw new Exception('Currency code can\'t be null');
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function validateDriver()
     {
         if (is_null($this->driverClass))
-            throw new \Exception('Driver not selected');
+            throw new Exception('Driver not selected');
     }
-    public function setDescription($hasDescription)
+
+    public function setDescription($hasDescription): PayUz
     {
         $this->driverClass->setDescription($hasDescription);
         return $this;
