@@ -10,7 +10,6 @@
 * [Configurations](getting-started/configurations.md)
 * [Basic usage](getting-started/usage.md)
 * [Integrate with invoices](getting-started/invoice_usage.md)
-* [Upgrading](getting-started/upgrading.md)
 
 ## Listeners
 
