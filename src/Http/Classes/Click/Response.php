@@ -73,7 +73,7 @@ class Response{
     }
 
     /**
-     *
+     *  Send method
      */
     public function send(){
         $params = PaymentSystemService::getPaymentSystemParamsCollect(PaymentSystem::CLICK);

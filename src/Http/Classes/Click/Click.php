@@ -54,6 +54,9 @@ class Click extends BaseGateway
         }
     }
 
+    /**
+     * Prepare method
+     */
     protected function Prepare()
     {
 
@@ -102,6 +105,10 @@ class Click extends BaseGateway
 
         $this->response->setResult(Response::SUCCESS, $additional_params);
     }
+
+    /**
+     *  Copmplete method
+     */
     protected function Complete()
     {
         $params = $this->request->all();
@@ -186,7 +193,10 @@ class Click extends BaseGateway
         ]);
     }
 
-    protected function check_for_required_field($fields)
+    /**
+     *  Check for required fields
+     */
+    protected function check_for_required_field($fields): bool
     {
         $arr = $this->request->all();
 
@@ -202,6 +212,14 @@ class Click extends BaseGateway
         return true;
     }
 
+    /**
+     * Get redirect params
+     * @param $model
+     * @param $amount
+     * @param $currency
+     * @param $url
+     * @return array
+     */
     public function getRedirectParams($model, $amount, $currency, $url): array
     {
         $time = date('Y-m-d H:i:s', time());

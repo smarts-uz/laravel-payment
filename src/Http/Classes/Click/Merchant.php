@@ -17,6 +17,11 @@ class Merchant
         $this->response = $response;
     }
 
+    /**
+     * Validate request
+     * @param $request
+     * @return void
+     */
     public function validateRequest($request)
     {
         $result = false;
@@ -34,6 +39,11 @@ class Merchant
         }
     }
 
+    /**
+     * Validate prepare request
+     * @param $request
+     * @return bool
+     */
     public function validatePrepareRequest($request)
     {
         $sign = md5($request['click_trans_id'] .
@@ -44,6 +54,11 @@ class Merchant
         return $sign == $request['sign_string'];
     }
 
+    /**
+     * Validate complete request
+     * @param $request
+     * @return bool
+     */
     public function validateCompleteRequest($request)
     {
         $sign = md5(

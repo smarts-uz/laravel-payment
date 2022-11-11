@@ -68,6 +68,9 @@ class Payme extends BaseGateway
         }
     }
 
+    /**
+     * Check perform transaction
+     */
     protected function CheckPerformTransaction()
     {
         $this->validateParams($this->request->params);
@@ -114,6 +117,10 @@ class Payme extends BaseGateway
             $this->response->success(['allow' => true]);
         }
     }
+
+    /**
+     * Check transaction
+     */
     protected function CheckTransaction()
     {
         $transaction  =  $this->findTransactionByParams($this->request->params);
@@ -135,6 +142,9 @@ class Payme extends BaseGateway
         ]);
     }
 
+    /**
+     * Validate params
+     */
     public function validateParams(array $params)
     {
         // for example, check amount is numeric
@@ -153,6 +163,10 @@ class Payme extends BaseGateway
 
         return true;
     }
+
+    /**
+     * Create transaction
+     */
     protected function CreateTransaction()
     {
 
@@ -227,6 +241,9 @@ class Payme extends BaseGateway
         ]);
     }
 
+    /**
+     * Perform transaction
+     */
     protected function PerformTransaction()
     {
         $transaction = $this->findTransactionByParams($this->request->params);
@@ -288,6 +305,10 @@ class Payme extends BaseGateway
                 break;
         }
     }
+
+    /**
+     * Cancel transaction
+     */
     protected function CancelTransaction()
     {
         $transaction = $this->findTransactionByParams($this->request->params);
@@ -335,36 +356,37 @@ class Payme extends BaseGateway
                 break;
 
             case Transaction::STATE_COMPLETED:
-                if (true) {
-                    $transaction->cancel(1 * $this->request->params['reason']);
+                $transaction->cancel(1 * $this->request->params['reason']);
 
-                    $detail = $transaction->detail;
+                $detail = $transaction->detail;
 
-                    PaymentService::payListener(null, $transaction, 'cancel-pay');
+                PaymentService::payListener(null, $transaction, 'cancel-pay');
 
-                    $this->response->success([
-                        'transaction' => (string)$transaction->id,
-                        'cancel_time' => 1 * $detail['cancel_time'],
-                        'state'       => 1 * $transaction->state,
-                    ]);
-                } else {
-                    $this->response->error(
-                        Response::ERROR_COULD_NOT_CANCEL,
-                        'Could not cancel transaction. Order is delivered/Service is completed.'
-                    );
-                }
+                $this->response->success([
+                    'transaction' => (string)$transaction->id,
+                    'cancel_time' => 1 * $detail['cancel_time'],
+                    'state'       => 1 * $transaction->state,
+                ]);
                 break;
         }
     }
 
+    /**
+     * Find transaction by params
+     */
     public function findTransactionByParams($params)
     {
-        $transaction = Transaction::where('payment_system', PaymentSystem::PAYME)->where('system_transaction_id', $params['id'])->first();
-        return $transaction;
+        return Transaction::query()->where('payment_system', PaymentSystem::PAYME)->where('system_transaction_id', $params['id'])->first();
     }
-    public function getModelTransactions($model, $active = false)
+
+    /**
+     * @param $model
+     * @param bool $active
+     * @return mixed
+     */
+    public function getModelTransactions($model, bool $active = false)
     {
-        $transactions = Transaction::where('payment_system', PaymentSystem::PAYME)
+        $transactions = Transaction::query()->where('payment_system', PaymentSystem::PAYME)
             ->where('transactionable_type', get_class($model))
             ->where('transactionable_id', $model->id);
         if ($active)
@@ -404,6 +426,10 @@ class Payme extends BaseGateway
         $this->response->success(['success' => true]);
     }
 
+    /**
+     * Get statement
+     * @return void
+     */
     protected function GetStatement()
     {
         // validate 'from'
@@ -427,6 +453,13 @@ class Payme extends BaseGateway
         // send results back
         $this->response->success(['transactions' => $transactions]);
     }
+
+    /**
+     * Get report
+     * @param $from_date
+     * @param $to_date
+     * @return array
+     */
     public function getReport($from_date, $to_date)
     {
         $from_date = DataFormat::timestamp2datetime($from_date);
@@ -461,6 +494,15 @@ class Payme extends BaseGateway
         }
         return $result;
     }
+
+    /**
+     * Get redirect params
+     * @param $model
+     * @param $amount
+     * @param $currency
+     * @param $url
+     * @return array
+     */
     public function getRedirectParams($model, $amount, $currency, $url)
     {
 

@@ -7,7 +7,7 @@ In this file you can find various options to change the configuration of your Pa
 
 Below we will take a deep dive into the configuration file and give a detailed description of each configuration set.
 
-## Payuz
+## Laravel-Payment
 
 ```php
 <?php
@@ -42,3 +42,22 @@ You should define
 * key - it is your model attribute for find model e.g. "user_id" or "id"
 
 ![Payme_Config](../.gitbook/assets/payme_config.png)
+
+
+For example (Click):  
+You should define
+* service_id,
+* merchant_id,
+* merchant_user_id,
+* return_url
+
+![Payme_Config](../.gitbook/assets/click_config.png)
+
+
+For example (Paynet):  
+You should define
+* login,
+* password,
+* service_id
+
+![Payme_Config](../.gitbook/assets/paynet_config.png)

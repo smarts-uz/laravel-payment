@@ -4,7 +4,6 @@
 
 ## Getting started
 
-* [What is Pay Uz](getting-started/what-is-pay-uz.md)
 * [Prerequisites](getting-started/prerequisites.md)
 * [Installation](getting-started/installation.md)
 * [Configurations](getting-started/configurations.md)
