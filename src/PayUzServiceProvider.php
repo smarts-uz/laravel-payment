@@ -5,6 +5,8 @@ namespace Teamprodev\LaravelPayment;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\ServiceProvider;
 use Teamprodev\LaravelPayment\Console\CheckInvoiceCommand;
+use Teamprodev\LaravelPayment\Console\ClickInvoicesTestCommand;
+use Teamprodev\LaravelPayment\Console\PaymeReceiptsTestCommand;
 
 class PayUzServiceProvider extends ServiceProvider
 {
@@ -32,7 +34,9 @@ class PayUzServiceProvider extends ServiceProvider
             ], 'pay-uz-assets');
 
             $this->commands([
-                CheckInvoiceCommand::class
+                CheckInvoiceCommand::class,
+                ClickInvoicesTestCommand::class,
+                PaymeReceiptsTestCommand::class
             ]);
         }
     }

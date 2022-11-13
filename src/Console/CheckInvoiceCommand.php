@@ -4,6 +4,7 @@ namespace Teamprodev\LaravelPayment\Console;
 
 use Illuminate\Console\Command;
 use Teamprodev\LaravelPayment\Models\TransactionForCheck;
+use Teamprodev\LaravelPayment\Services\CheckTransactionService;
 
 class CheckInvoiceCommand extends Command
 {
@@ -34,7 +35,7 @@ class CheckInvoiceCommand extends Command
             ->get();
 
         foreach ($transactionsForCheck as $transactionForCheck) {
-            $transactionForCheck->check();
+            CheckTransactionService::check($transactionForCheck);
         }
 
         return 0;
